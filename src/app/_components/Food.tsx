@@ -1,4 +1,5 @@
-import { BASE_URL } from "@/app/constants"
+import { BASE_URL } from "@/constants";
+
 
 type CategoryType = {
     name: string;
