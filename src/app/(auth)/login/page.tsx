@@ -41,7 +41,7 @@ const Login = () => {
 
             const decodedToken = jwtDecode(user.data.token);
             // console.log(decodedToken);
-            localStorage.setItem(decodedToken)
+            localStorage.setItem("token", decodedToken)
 
             if (decodedToken.user.role == "ADMIN") {
                 router.push('/admin');
