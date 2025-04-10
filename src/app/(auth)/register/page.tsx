@@ -3,11 +3,18 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { BASE_URL } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner"
+import { useRouter } from 'next/navigation'
 
 const Register = () => {
+    const [error, setError] = useState("");
+    const router = useRouter();
 
     const formSchema = z.object({
         email: z.string().min(2).max(50),
@@ -22,7 +29,16 @@ const Register = () => {
         },
     })
 
-    const onSubmit = (value) => {
+    const onSubmit = async (value) => {
+        try {
+            const user = await axios.post(`${BASE_URL}/auth/register`, value);
+            if (user) {
+                toast("User successfully registered");
+                router.push("/login")
+            }
+        } catch (error) {
+            setError(error.Formmessage)
+        }
         console.log(value)
     }
 
@@ -56,6 +72,7 @@ const Register = () => {
                                 </FormItem>
                             )}
                         />
+                        {error && <p>{error}</p>}
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>
