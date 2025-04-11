@@ -12,7 +12,7 @@ export default function AdminLayout({
   useLayoutEffect(() => {
     const token = localStorage.getItem("token");
 
-    const decode = jwtDecode(token);
+    const decode = jwtDecode("token",);
 
     if (decode.user.role != "ADMIN") {
       router.push("/");

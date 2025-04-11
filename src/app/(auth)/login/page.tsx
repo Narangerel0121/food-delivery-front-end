@@ -18,7 +18,7 @@ const Login = () => {
     const router = useRouter();
 
     const formSchema = z.object({
-        email: z.string().min(2).max(50),
+        email: z.string().email().min(2).max(50),
         password: z.string().min(8),
     })
 
@@ -33,15 +33,14 @@ const Login = () => {
     const onSubmit = async (value) => {
         try {
             const user = await axios.post(`${BASE_URL}/auth/login`, value);
-            // console.log(user, "user info")
+            console.log(user, "user info")
             if (user) {
-                // toast("User successfully registered");
-                // router.push("/login")
+                // router.push("/")
             }
 
             const decodedToken = jwtDecode(user.data.token);
             // console.log(decodedToken);
-            localStorage.setItem("token", decodedToken)
+            // localStorage.setItem("token", decodedToken) // yanzlah
 
             if (decodedToken.user.role == "ADMIN") {
                 router.push('/admin');

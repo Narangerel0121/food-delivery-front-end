@@ -1,121 +1,105 @@
-"use client";
+"use client"
 
 import { Button } from "@/components/ui/button";
-import {
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-  Form,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { headers } from "next/headers";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner"
+import { useRouter } from 'next/navigation'
 
 const Admin = () => {
-  const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    price: z.string(),
-    ingredients: z.string(),
-    category: z.string(),
-  });
+    const [error, setError] = useState("");
+    const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      price: "",
-      ingredients: "",
-      category: "",
-    },
-  });
+    const formSchema = z.object({
+        foodName: z.string(),
+        price: z.string(),
+        ingredients: z.string(),
+        image: z.string()
+    })
 
-  const onSubmit = async (val) => {
-    const token = localStorage.getItem("token");
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            foodName: "",
+            price: "",
+            ingredients: "",
+            image: ""
+        },
+    })
 
-    const food = await axios.post(`${BASE_URL}/foods`, val, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const onSubmit = async (value) => {
+        try {
+            const user = await axios.post(`${BASE_URL}/foods`, value);
+            if (user) {
+                toast("Food successfully added");
+                // router.push("/")
+            }
+        } catch (error) {
+            setError(error.Formmessage)
+        }
+        console.log(value)
+    }
 
-    console.log(food);
-  };
+    return (
+        <div>
+            <h1>Admin: Add food...</h1>
+            <div>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="foodName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="foodName" type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="price"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="price" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="ingredients"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="ingredients" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
+                            <Input id="picture" type="file" />
+                        </div> */}
+                        {error && <p>{error}</p>}
+                        <Button type="submit">Submit</Button>
+                    </form>
+                </Form>
 
-  return (
-    <div className="w-1/2 mx-auto">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="my-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Enter food name..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="my-4">
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter food price..."
-                      type="number"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="my-4">
-            <FormField
-              control={form.control}
-              name="ingredients"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="my-4">
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Enter categoryF..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+            </div>
+        </div>
+    )
+}
 
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
-    </div>
-  );
-};
 
-export default Admin;
+export default Admin
