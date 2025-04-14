@@ -11,7 +11,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
-import { jwtDecode } from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
+
+export type ValueType = {
+    email: String,
+    password: String
+}
+
+export type ErrorType = {
+
+}
 
 const Login = () => {
     const [error, setError] = useState("");
@@ -30,7 +39,7 @@ const Login = () => {
         },
     })
 
-    const onSubmit = async (value) => {
+    const onSubmit = async (value: ValueType) => {
         try {
             const user = await axios.post(`${BASE_URL}/auth/login`, value);
             console.log(user.data.token, "user info")
@@ -38,12 +47,12 @@ const Login = () => {
                 // router.push("/");
                 console.log("amjilltai")
             }
-            
+
             localStorage.setItem("token", user.data.token)
 
             const decodedToken = jwtDecode(user.data.token);
             console.log(decodedToken);
-       
+
 
             if (decodedToken.user.role == "ADMIN") {
                 router.push('/admin');
@@ -52,7 +61,8 @@ const Login = () => {
                 router.push('/')
             }
 
-        } catch (error) {
+        } catch (error: any) {
+        console.log(error, "error")
             setError(error.response.data.error)
             // setError(error.message)
         }

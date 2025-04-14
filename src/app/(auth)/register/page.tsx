@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
+import { ValueType } from "../login/page";
 
 const Register = () => {
     const [error, setError] = useState("");
@@ -29,14 +30,14 @@ const Register = () => {
         },
     })
 
-    const onSubmit = async (value) => {
+    const onSubmit = async (value: ValueType) => {
         try {
             const user = await axios.post(`${BASE_URL}/auth/register`, value);
             if (user) {
                 toast("User successfully registered");
                 router.push("/login")
             }
-        } catch (error) {
+        } catch (error: any) {
             setError(error.Formmessage)
         }
         console.log(value)
