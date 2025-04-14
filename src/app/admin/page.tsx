@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const Admin = () => {
-    const [file, setFile] = useState("");
+    const [file, setFile] = useState<String>("");
 
     const formSchema = z.object({
         foodName: z.string().min(2).max(50),
@@ -39,11 +39,19 @@ const Admin = () => {
         },
     });
 
-    const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-
+    // const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    const UPLOAD_PRESET = "ml_default";
     const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-    const onSubmit = async (value) => {
+    type ValueType = {
+        foodName: string,
+        price: string,
+        ingredients: string,
+        category: string,
+        image: string,
+    }
+
+    const onSubmit = async (value: ValueType) => {
 
         const formData = new FormData();
         formData.append("file", file);
@@ -97,7 +105,7 @@ const Admin = () => {
                                     <FormControl>
                                         <Input
                                             placeholder="Enter food price..."
-                                            type="number"
+                                            type="text"
                                             {...field}
                                         />
                                     </FormControl>
@@ -139,7 +147,7 @@ const Admin = () => {
                         />
                     </div>
                     <div className="my-4">
-                        <Input type="file" onChange={(event) => setFile(event.target.files[0])} />
+                        <Input type="file" onChange={(event:any) => setFile(event.target.files[0])} /> 
                     </div>
 
                     <Button type="submit">Submit</Button>
