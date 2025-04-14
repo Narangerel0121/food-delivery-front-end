@@ -43,7 +43,7 @@ const Admin = () => {
 
     const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-    const onSubmit = async (val) => {
+    const onSubmit = async (value) => {
 
         const formData = new FormData();
         formData.append("file", file);
@@ -61,7 +61,7 @@ const Admin = () => {
         // console.log(result)
 
         const token = localStorage.getItem("token");
-        const food = await axios.post(`${BASE_URL}/foods`, { ...val, image: url }, {
+        const food = await axios.post(`${BASE_URL}/foods`, { ...value, image: url }, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
