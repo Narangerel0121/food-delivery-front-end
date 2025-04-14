@@ -13,11 +13,17 @@ export default function AdminLayout({
   useLayoutEffect(() => {
     const token = localStorage.getItem("token");
 
-    const decode: DecodedTokenType = jwtDecode(token);
-
-    if (decode.user.role != "ADMIN") {
-      router.push("/");
+    if (typeof token === 'string') {
+      const decode: DecodedTokenType = jwtDecode(token);
+      if (decode.user.role != "ADMIN") {
+        router.push("/");
+      }
+    } else {
+      console.error("Token not found in localStorage.");
     }
+    // const token = localStorage.getItem("token");
+    // const decode: DecodedTokenType = jwtDecode(token);
+
   }, []);
   return <section>{children}</section>;
 }

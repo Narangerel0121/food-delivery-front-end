@@ -25,7 +25,7 @@ export type DecodedTokenType = {
         role: String,
         id: String
     }
-    token: string | null
+    token: string,
 }
 
 const Login = () => {
