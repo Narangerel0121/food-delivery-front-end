@@ -1,9 +1,11 @@
-import { Food } from "@/app/_components/Food";
+import { FoodList } from "@/app/_components/FoodList";
+import { CategoryList } from "./_components/CategoryList";
 
 export default function Home() {
   return (
-    <div>
-      <Food />
+    <div className="bg-neutral-700 w-full h-fit px-12 py-8">
+   <CategoryList />
+   <FoodList />
     </div>
   );
 }
