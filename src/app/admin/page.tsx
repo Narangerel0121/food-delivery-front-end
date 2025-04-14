@@ -1,27 +1,32 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+    FormField,
+    FormItem,
+    FormControl,
+    FormMessage,
+    Form,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { BASE_URL } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { headers } from "next/headers";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "sonner"
-import { useRouter } from 'next/navigation'
 
 const Admin = () => {
-    const [error, setError] = useState("");
-    const router = useRouter();
+    const [file, setFile] = useState("");
 
     const formSchema = z.object({
-        foodName: z.string(),
+        foodName: z.string().min(2).max(50),
         price: z.string(),
         ingredients: z.string(),
-        image: z.string()
-    })
+        category: z.string(),
+        image: z.string(),
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -29,77 +34,119 @@ const Admin = () => {
             foodName: "",
             price: "",
             ingredients: "",
-            image: ""
+            category: "",
+            image: "",
         },
-    })
+    });
 
-    const onSubmit = async (value) => {
-        try {
-            const user = await axios.post(`${BASE_URL}/foods`, value);
-            if (user) {
-                toast("Food successfully added");
-                // router.push("/")
+    const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+    const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+    const onSubmit = async (val) => {
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+
+        const response = await fetch(
+            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+            {
+                method: "POST",
+                body: formData,
             }
-        } catch (error) {
-            setError(error.Formmessage)
-        }
-        console.log(value)
-    }
+        );
+
+        const { url } = await response.json();
+        // console.log(result)
+
+        const token = localStorage.getItem("token");
+        const food = await axios.post(`${BASE_URL}/foods`, { ...val, image: url }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log(food);
+    };
 
     return (
-        <div>
-            <h1>Admin: Add food...</h1>
-            <div>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="w-1/2 mx-auto">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="my-4">
                         <FormField
                             control={form.control}
                             name="foodName"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="foodName" type="text" {...field} />
+                                        <Input placeholder="Enter food name..." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                    </div>
+                    <div className="my-4">
                         <FormField
                             control={form.control}
                             name="price"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="price" {...field} />
+                                        <Input
+                                            placeholder="Enter food price..."
+                                            type="number"
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+                    </div>
+                    <div className="my-4">
                         <FormField
                             control={form.control}
                             name="ingredients"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="ingredients" {...field} />
+                                        <Input
+                                            placeholder="Enter food ingredients..."
+                                            type="text"
+                                            {...field}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        {/* <div className="grid w-full max-w-sm items-center gap-1.5">
-                            <Input id="picture" type="file" />
-                        </div> */}
-                        {error && <p>{error}</p>}
-                        <Button type="submit">Submit</Button>
-                    </form>
-                </Form>
+                    </div>
+                    <div className="my-4">
+                        <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="Enter category..." {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="my-4">
+                        <Input type="file" onChange={(event) => setFile(event.target.files[0])} />
+                    </div>
 
-            </div>
+                    <Button type="submit">Submit</Button>
+                </form>
+            </Form>
         </div>
-    )
-}
+    );
+};
 
-
-export default Admin
+export default Admin;

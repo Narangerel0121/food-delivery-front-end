@@ -33,14 +33,17 @@ const Login = () => {
     const onSubmit = async (value) => {
         try {
             const user = await axios.post(`${BASE_URL}/auth/login`, value);
-            console.log(user, "user info")
+            console.log(user.data.token, "user info")
             if (user) {
-                // router.push("/")
+                // router.push("/");
+                console.log("amjilltai")
             }
+            
+            localStorage.setItem("token", user.data.token)
 
             const decodedToken = jwtDecode(user.data.token);
-            // console.log(decodedToken);
-            // localStorage.setItem("token", decodedToken) // yanzlah
+            console.log(decodedToken);
+       
 
             if (decodedToken.user.role == "ADMIN") {
                 router.push('/admin');
@@ -51,8 +54,9 @@ const Login = () => {
 
         } catch (error) {
             setError(error.response.data.error)
+            // setError(error.message)
         }
-        console.log(value)
+        // console.log(value)
     }
 
     return (
