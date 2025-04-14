@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const Admin = () => {
-    const [file, setFile] = useState<String>("");
+    const [file, setFile] = useState<any>("");
 
     const formSchema = z.object({
         foodName: z.string().min(2).max(50),

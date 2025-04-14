@@ -18,8 +18,14 @@ export type ValueType = {
     password: String
 }
 
-export type ErrorType = {
-
+export type DecodedTokenType = {
+    user: {
+        email: String,
+        password: String,
+        role: String,
+        id: String
+    }
+    token: string
 }
 
 const Login = () => {
@@ -50,7 +56,7 @@ const Login = () => {
 
             localStorage.setItem("token", user.data.token)
 
-            const decodedToken = jwtDecode(user.data.token);
+            const decodedToken: DecodedTokenType = jwtDecode(user.data.token);
             console.log(decodedToken);
 
 
@@ -62,7 +68,7 @@ const Login = () => {
             }
 
         } catch (error: any) {
-        console.log(error, "error")
+            console.log(error, "error")
             setError(error.response.data.error)
             // setError(error.message)
         }
