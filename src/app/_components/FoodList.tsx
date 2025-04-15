@@ -1,5 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BASE_URL } from "@/constants";
+import { Plus } from "lucide-react";
+import { DialogDemo } from "./DialogDemo";
 
 
 export type CategoryType = {
@@ -37,9 +40,10 @@ const FoodList = async () => {
                         <h1 className="font-semibold text-3xl text-white mb-9 mt-16">{category.name}</h1>
                         <div className="grid grid-cols-4">{category.foods.map((food) => {
                             return (
-                                <Card key={food._id} className="p-2 w-[360px] rounded-[20px] my-9">
-                                    <CardHeader>
-                                        <img src={`${food.image}`} className="object-cover rounded-xl mt-5" />
+                                <Card key={food._id} className="w-[360px] rounded-[20px] my-9 p-4">
+                                    <CardHeader className="relative w-full p-0">
+                                        <img src={`${food.image}`} className="object-cover rounded-xl" />
+                                        <DialogDemo id={food._id} name={food.foodName} price={food.price} ingredients={food.ingredients} />
                                     </CardHeader>
                                     <CardContent className="flex justify-between">
                                         <CardTitle>{food.foodName}</CardTitle>
