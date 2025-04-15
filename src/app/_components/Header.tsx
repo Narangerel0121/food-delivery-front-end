@@ -12,10 +12,10 @@ const Header = () => {
                 </div>
             </div>
             <div className="flex items-center gap-3">
-                <div className="flex items-center bg-white px-3 py-2 rounded-full">
+                <div className="flex items-center bg-white rounded-full">
                     <Button size="icon" className="rounded-full bg-transparent"><MapPin size={13} color="#ef4444" strokeWidth={2} /></Button>
                     <p className="text-nowrap text-red-500 text-xs">Delivery address:</p>
-                    <input placeholder="Add location" className="pl-3 outline-none placeholder: text-gray-700 placeholder:text-xs"></input>
+                    <input placeholder="Add location" className="pl-3 w-fit text-xs outline-none placeholder: text-gray-700 placeholder: text-xs"></input>
                     <Button size="icon" className="bg-transparent"><ChevronRight size={16} color="rgba(24, 24, 27, 0.5)" strokeWidth={2} /></Button>
                 </div>
                 <Button size="icon" variant="outline" className="bg-white p-4 rounded-full"><ShoppingCart size={16} color="#000000" strokeWidth={1} /></Button>

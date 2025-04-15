@@ -12,6 +12,7 @@ import { z } from "zod";
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
 import { ValueType } from "../login/page";
+import { useAuth } from "@/providers/AuthProvider";
 
 const Register = () => {
     const [error, setError] = useState("");
@@ -28,7 +29,9 @@ const Register = () => {
             email: "",
             password: ""
         },
-    })
+    });
+
+    const {register, error} = useAuth();
 
     const onSubmit = async (value: ValueType) => {
         try {

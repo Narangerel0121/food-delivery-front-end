@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BASE_URL } from "@/constants";
-import { Plus } from "lucide-react";
 import { DialogDemo } from "./DialogDemo";
 
 
@@ -41,17 +40,17 @@ const FoodList = async () => {
                         <div className="grid grid-cols-4">{category.foods.map((food) => {
                             return (
                                 <Card key={food._id} className="w-[360px] rounded-[20px] my-9 p-4">
-                                    <CardHeader className="relative w-full p-0">
+                                    <div className="relative w-full p-0">
                                         <img src={`${food.image}`} className="object-cover rounded-xl" />
-                                        <DialogDemo id={food._id} name={food.foodName} price={food.price} ingredients={food.ingredients} />
-                                    </CardHeader>
-                                    <CardContent className="flex justify-between">
-                                        <CardTitle>{food.foodName}</CardTitle>
+                                        <DialogDemo id={food._id} name={food.foodName} price={food.price} ingredients={food.ingredients} image={food.image} />
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <h5>{food.foodName}</h5>
                                         <p>{`$${food.price}`}</p>
-                                    </CardContent>
-                                    <CardFooter className="mb-5">
+                                    </div>
+                                    <div className="mb-5">
                                         {food.ingredients}
-                                    </CardFooter>
+                                    </div>
                                 </Card>
                             )
                         })}</div>

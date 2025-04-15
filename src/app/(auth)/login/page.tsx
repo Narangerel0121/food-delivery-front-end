@@ -12,6 +12,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "@/providers/AuthProvider";
 
 export type ValueType = {
     email: String,
@@ -43,36 +44,38 @@ const Login = () => {
             email: "",
             password: ""
         },
-    })
+    });
 
-    const onSubmit = async (value: ValueType) => {
-        try {
-            const user = await axios.post(`${BASE_URL}/auth/login`, value);
-            console.log(user.data.token, "user info")
-            if (user) {
-                // router.push("/");
-                console.log("amjilltai")
-            }
+    const { login } = useAuth();
 
-            localStorage.setItem("token", user.data.token)
+    const onSubmit = async (value) => {
+        login(value);
+        // try {
+        //     const user = await axios.post(`${BASE_URL}/auth/login`, value);
+        //     console.log(user.data.token, "user info")
+        //     if (user) {
+        //         toast("User successfully login.");
+        //     }
 
-            const decodedToken: DecodedTokenType = jwtDecode(user.data.token);
-            console.log(decodedToken);
+        //     localStorage.setItem("token", user.data.token)
+
+        //     const decodedToken: DecodedTokenType = jwtDecode(user.data.token);
+        //     console.log(decodedToken);
 
 
-            if (decodedToken.user.role == "ADMIN") {
-                router.push('/admin');
-                return;
-            } else {
-                router.push('/')
-            }
+        //     if (decodedToken.user.role == "ADMIN") {
+        //         router.push('/admin');
+        //         return;
+        //     } else {
+        //         router.push('/')
+        //     }
 
-        } catch (error: any) {
-            console.log(error, "error")
-            setError(error.response.data.error)
-            // setError(error.message)
-        }
-        // console.log(value)
+        // } catch (error: any) {
+        //     console.log(error, "error")
+        //     setError(error.response.data.error)
+        //     // setError(error.message)
+        // }
+        // // console.log(value)
     }
 
     return (
