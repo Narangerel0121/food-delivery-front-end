@@ -1,5 +1,5 @@
 import { FoodList } from "@/app/_components/FoodList";
-import { CategoryList } from "./_components/CategoryList";
+import { CategoryList } from "../_components/CategoryList";
 import { Header } from "./_components/Header";
 
 export default function Home() {

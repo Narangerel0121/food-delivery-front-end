@@ -31,7 +31,7 @@ export type DecodedTokenType = {
 
 const Login = () => {
     const [error, setError] = useState("");
-    const router = useRouter();
+    // const router = useRouter();
 
     const formSchema = z.object({
         email: z.string().email().min(2).max(50),
@@ -48,7 +48,7 @@ const Login = () => {
 
     const { login } = useAuth();
 
-    const onSubmit = async (value) => {
+    const onSubmit = async (value:ValueType) => {
         login(value);
         // try {
         //     const user = await axios.post(`${BASE_URL}/auth/login`, value);

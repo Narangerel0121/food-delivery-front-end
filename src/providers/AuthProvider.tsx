@@ -3,7 +3,7 @@ import { DecodedTokenType, ValueType } from "@/app/(auth)/login/page";
 import { BASE_URL } from "@/constants";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { toast } from "sonner";
 
@@ -15,15 +15,16 @@ type LoginType = {
 type UserType = {
     email: string;
     password: string;
-    // createdAt: string;
-    // updatedAt: string;
     role: string;
     id: string;
+    // createdAt: string;
+    // updatedAt: string;
 }
 
 type ContextType = {
     user: UserType | null;
     token: string | null;
+    register: () => void;
     login: (_value: LoginType) => void;
     logout: () => void;
     error: string | null;
@@ -33,14 +34,23 @@ type ContextType = {
 const AuthContext = createContext({
     user: null,
     token: null,
+    register: () => { },
     login: () => { },
     logout: () => { }
 });
 
+const decodeToken = (token) => {
+    if(!token) return null;
+    const decodedToken = jwtDecode(token)
+    return decodedToken.user
+}
+
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [user, setUser] = useState<null | UserType>(null);
+
+    const [user, setUser] = useState( null);
     const [token, setToken] = useState(null);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState("");
+
     const router = useRouter();
 
     const login = async (value: ValueType) => {
@@ -54,10 +64,11 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
             setToken(response.data.token);
             localStorage.setItem("token", response.data.token);
 
-            const decodedToken: DecodedTokenType = jwtDecode(response.data.token);
+            const decodedToken: DecodedTokenType = jwtDecode(decodeToken(response.data.token));
             console.log(decodedToken);
 
-            setUser(decodedToken.user)
+            setUser(decodedToken.user);
+            
             if (decodedToken.user.role == "ADMIN") {
                 router.push('/admin');
                 return;
@@ -67,17 +78,23 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
         } catch (error: any) {
             console.log(error, "error")
-            setError(error.response.data.error)
-            // setError(error.message)
+            // setError(error.response.data.error)
+            setError(error.message)
         }
     }
 
     const logout = () => {
-        console.log("logout funciton")
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem("token");
     }
 
     return (
-        <AuthContext.Provider value={{ user, token, register, error, login, logout }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider
+            value={{ user, token, error, login, logout }}
+        >
+            {children}
+        </AuthContext.Provider>
     )
 }
 

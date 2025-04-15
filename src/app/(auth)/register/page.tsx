@@ -15,7 +15,7 @@ import { ValueType } from "../login/page";
 import { useAuth } from "@/providers/AuthProvider";
 
 const Register = () => {
-    const [error, setError] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     const formSchema = z.object({
@@ -30,8 +30,6 @@ const Register = () => {
             password: ""
         },
     });
-
-    const {register, error} = useAuth();
 
     const onSubmit = async (value: ValueType) => {
         try {
