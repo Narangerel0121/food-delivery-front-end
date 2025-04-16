@@ -11,12 +11,20 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
-import { ValueType } from "../login/page";
-import { useAuth } from "@/providers/AuthProvider";
+import { LoginType } from "../login/page";
+
+export type ErrorType = {
+    response: {
+        data: {
+            error: string;
+        };
+    };
+    message: string;
+};
 
 const Register = () => {
-    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
 
     const formSchema = z.object({
         email: z.string().email(),
@@ -31,18 +39,17 @@ const Register = () => {
         },
     });
 
-    const onSubmit = async (value: ValueType) => {
+    const onSubmit = async (value: LoginType) => {
         try {
             const user = await axios.post(`${BASE_URL}/auth/register`, value);
             if (user) {
                 toast("User successfully registered");
                 router.push("/login")
             }
-        } catch (error: any) {
-            setError(error.Formmessage)
+        } catch (error: unknown) {
+            setError((error as ErrorType).response.data.error);
         }
-        console.log(value)
-    }
+    };
 
     return (
         <div>
@@ -74,7 +81,7 @@ const Register = () => {
                                 </FormItem>
                             )}
                         />
-                        {error && <p>{error}</p>}
+                        {error && <p className="text-red-500">{error}</p>}
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>

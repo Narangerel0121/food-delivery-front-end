@@ -2,9 +2,12 @@
 import { useLayoutEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
-import { DecodedTokenType } from "@/app/(auth)/login/page";
-import { useAuth } from "@/providers/AuthProvider";
 
+type UserType = {
+  user: {
+    role: string;
+  };
+};
 
 export default function AdminLayout({
   children,
@@ -12,11 +15,20 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { user } = useAuth;
   useLayoutEffect(() => {
-    if (user.role != "ADMIN") {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    const decode: UserType = jwtDecode(token as string);
+
+    if (decode.user.role != "ADMIN") {
       router.push("/");
     }
   }, []);
+
   return <section>{children}</section>;
 }

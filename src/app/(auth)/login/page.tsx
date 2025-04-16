@@ -1,20 +1,14 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { BASE_URL } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "sonner";
-import { useRouter } from 'next/navigation';
-import { jwtDecode } from "jwt-decode";
 import { useAuth } from "@/providers/AuthProvider";
 
-export type ValueType = {
+export type LoginType = {
     email: String,
     password: String
 }
@@ -30,8 +24,8 @@ export type DecodedTokenType = {
 }
 
 const Login = () => {
-    const [error, setError] = useState("");
-    // const router = useRouter();
+
+    const { login, error } = useAuth();
 
     const formSchema = z.object({
         email: z.string().email().min(2).max(50),
@@ -46,36 +40,9 @@ const Login = () => {
         },
     });
 
-    const { login } = useAuth();
-
-    const onSubmit = async (value:ValueType) => {
+    const onSubmit = async (value: LoginType) => {
         login(value);
-        // try {
-        //     const user = await axios.post(`${BASE_URL}/auth/login`, value);
-        //     console.log(user.data.token, "user info")
-        //     if (user) {
-        //         toast("User successfully login.");
-        //     }
-
-        //     localStorage.setItem("token", user.data.token)
-
-        //     const decodedToken: DecodedTokenType = jwtDecode(user.data.token);
-        //     console.log(decodedToken);
-
-
-        //     if (decodedToken.user.role == "ADMIN") {
-        //         router.push('/admin');
-        //         return;
-        //     } else {
-        //         router.push('/')
-        //     }
-
-        // } catch (error: any) {
-        //     console.log(error, "error")
-        //     setError(error.response.data.error)
-        //     // setError(error.message)
-        // }
-        // // console.log(value)
+       
     }
 
     return (
@@ -108,7 +75,7 @@ const Login = () => {
                                 </FormItem>
                             )}
                         />
-                        {error && <p>{error}</p>}
+                        {error && <p className="text-red-500">{error}</p>}
                         <Button type="submit">Submit</Button>
                     </form>
                 </Form>

@@ -1,5 +1,6 @@
 "use client"
-import { DecodedTokenType, ValueType } from "@/app/(auth)/login/page";
+import { DecodedTokenType } from "@/app/(auth)/login/page";
+import { ErrorType } from "@/app/(auth)/register/page";
 import { BASE_URL } from "@/constants";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -34,41 +35,33 @@ type ContextType = {
 const AuthContext = createContext({
     user: null,
     token: null,
-    register: () => { },
-    login: () => { },
-    logout: () => { }
+    error: "",
+    login: (_value: any) => {},
+    logout: () => {}
 });
-
-const decodeToken = (token) => {
-    if(!token) return null;
-    const decodedToken = jwtDecode(token)
-    return decodedToken.user
-}
 
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
-    const [user, setUser] = useState( null);
+    const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [error, setError] = useState("");
 
     const router = useRouter();
 
-    const login = async (value: ValueType) => {
+    const login = async (value: LoginType) => {
         try {
-            const response = await axios.post(`${BASE_URL}/auth/login`, value);
-            console.log(response.data.token, "user info")
-            if (response) {
+            const user = await axios.post(`${BASE_URL}/auth/login`, value);
+       
+            if (user) {
                 toast("User successfully login.");
             }
 
-            setToken(response.data.token);
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("token", user.data.token);
 
-            const decodedToken: DecodedTokenType = jwtDecode(decodeToken(response.data.token));
+            const decodedToken: DecodedTokenType = jwtDecode( user.data.token);
+
             console.log(decodedToken);
 
-            setUser(decodedToken.user);
-            
             if (decodedToken.user.role == "ADMIN") {
                 router.push('/admin');
                 return;
@@ -76,18 +69,14 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
                 router.push('/')
             }
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error, "error")
-            // setError(error.response.data.error)
-            setError(error.message)
+            // setError((error as ErrorType).response.data.error);
+            setError((error as ErrorType).message);
         }
     }
 
-    const logout = () => {
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem("token");
-    }
+    const logout = () => {}
 
     return (
         <AuthContext.Provider
@@ -101,5 +90,5 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
 export default AuthProvider;
 
 export const useAuth = () => {
-    return useContext(AuthContext)
+    return useContext(AuthContext);
 }
