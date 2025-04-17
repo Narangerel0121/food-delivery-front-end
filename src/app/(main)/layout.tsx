@@ -2,6 +2,7 @@
 
 import "../globals.css";
 import { Header } from "../_components/Header";
+import CartProvider from "@/providers/CartProvider";
 
 export default function MainLayout({
   children,
@@ -10,8 +11,10 @@ export default function MainLayout({
 }) {
   return (
     <section>
+      <CartProvider>
       <Header />
       {children}
+      </CartProvider>
     </section>
   );
 }

@@ -37,7 +37,7 @@ const FoodList = async () => {
                 return (
                     <div key={category._id}>
                         <h1 className="font-semibold text-3xl text-white mb-9 mt-16">{category.name}</h1>
-                        <div className="grid grid-cols-4">{category.foods.map((food) => {
+                        <div className="grid grid-cols-4 space-x-9">{category.foods.map((food) => {
                             return (
                                 <Card key={food._id} className="w-[360px] rounded-[20px] my-9 p-4">
                                     <div className="relative w-full p-0">
