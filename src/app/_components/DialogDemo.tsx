@@ -17,13 +17,14 @@ export function DialogDemo(props: any) {
   const [totalPrice, setTotalPrice] = useState(Number(props.price));
   const { addItem } = useCart();
 
-  const increment = (prev) => {
+  const increment = (prev: any) => {
     setCounter((prev) => prev + 1);
-    setTotalPrice(props.price * counter)
+    setTotalPrice((prev) => prev + props.price);
   }
 
-  const decrement = (prev) => {
-    setCounter((prev) => prev - props.price)
+  const decrement = (prev: any) => {
+    setCounter((prev) => prev - 1);
+    setTotalPrice((prev) => prev - props.price)
   }
 
   const addCart = () => {
@@ -39,17 +40,11 @@ export function DialogDemo(props: any) {
         <Button size="icon" variant="outline" className="rounded-full absolute left-66 top-40 bg-white p-4"><Plus size={10} color="#ef4444" /></Button>
       </DialogTrigger>
       <DialogContent className="grid grid-cols-2 min-w-3xl min-h-2/5 gap-4">
-        {/* <Image
-     src={`${props.image}`}
-     width={377}
-     height={364}
-     alt={`${props.name}`}
-     /> */}
         <img src={`${props.image}`} className="h-full rounded-md" />
         <div className="flex flex-col justify-between">
           <div>
             <DialogTitle>{props.name}</DialogTitle>
-            <p>{props.ingredients}</p>
+            <DialogDescription>{props.ingredients}</DialogDescription>
           </div>
           <div>
             <div className="flex justify-between">
