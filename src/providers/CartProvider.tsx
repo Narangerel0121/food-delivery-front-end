@@ -13,9 +13,9 @@ const CartContext = createContext({
 })
 
 type ItemType = {
-    count: string | number;
+    count: number;
     food: {
-        price: number | string;
+        price: number;
         ingredients: string[];
         name: string;
         _id: string;
@@ -28,14 +28,28 @@ const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [open, setOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
 
-    const addItem = (item: ItemType) => {
-        setOpen(true)
-        setItem((prev) => [...prev, item])
+    const addItem = (value: ItemType) => {
+        setOpen(true);
+    
+        const index = item.findIndex(i => i.food._id == value.food._id);
+        console.log(index, "index");
+        console.log(value, "value")
+
+        if (index != -1) {
+            const cloneArray = [...item];
+            cloneArray[index].count += value.count;
+            setItem(cloneArray);
+            return;
+        }
     };
 
+    // setItem(prev => [...prev, value])
+
     useEffect(() => {
-        console.log(item, "thisisitembro");
-        const eachFoodsTotal = item.map((i) => i.count * Number(i.food?.price));
+        const eachFoodsTotal = item.map((i) => {
+            return i.count * Number(i.food?.price)
+        });
+
         const total = eachFoodsTotal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
         // let total = 0;
