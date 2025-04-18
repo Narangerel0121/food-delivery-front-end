@@ -6,25 +6,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useCart } from "@/providers/CartProvider"
+import { FoodType, useCart } from "@/providers/CartProvider"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { Minus, Plus } from "lucide-react"
-import Image from "next/image"
 import { useState } from "react"
 
-export function DialogDemo(props: any) {
+export function DialogDemo(props: FoodType) {
   const [counter, setCounter] = useState(1);
   const [totalPrice, setTotalPrice] = useState(Number(props.price));
   const { addItem } = useCart();
 
-  const increment = (prev: any) => {
+  const increment = (prev: number) => {
     setCounter((prev) => prev + 1);
     setTotalPrice((prev) => prev + props.price);
   }
 
-  const decrement = (prev: any) => {
+  const decrement = (prev: number) => {
     setCounter((prev) => prev - 1);
-    setTotalPrice((prev) => prev - props.price)
+    setTotalPrice((_prev) => prev - props.price)
   }
 
   const addCart = () => {

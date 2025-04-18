@@ -4,36 +4,50 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 
+export type ItemType = {
+    count: number;
+    food: FoodType; 
+}
 
-const CartContext = createContext({
+export type FoodType = {
+    price: number;
+    ingredients: string[];
+    name: string;
+    image: string;
+    id: string;
+}
+
+type ContextType = {
+    item: ItemType[];
+    totalAmount: number;
+    addItem: (value: ItemType) => void;
+    removeItem?: (id: string) => void;
+    setOpen: (open: boolean) => void;
+}
+
+const CartContext = createContext<ContextType>({
     item: [],
     totalAmount: 0,
     addItem: (_item: any) => { },
-    removerItme: (_id: string) => { }
+    removeItem: (_id: string) => { },
+    setOpen: (_open: boolean) => {},
 })
 
-type ItemType = {
-    count: number;
-    food: {
-        price: number;
-        ingredients: string[];
-        name: string;
-        _id: string;
-    }
-}
-
-
 const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [item, setItem] = useState<ItemType[]>([]);
+    const getLocalStorage = 
+    typeof window !== "undefined" &&  localStorage.getItem("cart") 
+    ? JSON.parse(localStorage.getItem("cart") as string) 
+    : []
+    const [item, setItem] = useState<ItemType[]>(getLocalStorage);
     const [open, setOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
 
     const addItem = (value: ItemType) => {
         setOpen(true);
-    
-        const index = item.findIndex(i => i.food._id == value.food._id);
+
+        const index = item.findIndex((i: ItemType) => i.food.id == value.food.id);
         console.log(index, "index");
-        console.log(value, "value")
+        console.log(value, "value");
 
         if (index != -1) {
             const cloneArray = [...item];
@@ -41,13 +55,17 @@ const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
             setItem(cloneArray);
             return;
         }
+
+        setItem(prev => [...prev, value])
     };
 
-    // setItem(prev => [...prev, value])
+
 
     useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(item));
+
         const eachFoodsTotal = item.map((i) => {
-            return i.count * Number(i.food?.price)
+            return i.count * i.food.price
         });
 
         const total = eachFoodsTotal.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -58,14 +76,14 @@ const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }, [item])
 
     return (
-        <CartContext.Provider value={{ item, addItem }}>
+        <CartContext.Provider value={{ item, addItem, setOpen }}>
             <Sheet open={open} onOpenChange={setOpen}>
                 {/* <SheetTrigger>Open</SheetTrigger> */}
                 <SheetContent>
                     <div>
                         {item.map((i: any) => {
                             return (
-                                <div className="p-4">
+                                <div key={i.food._id} className="p-4">
                                     <img src={`${i.food.image}`} />
                                     <h5>{i.food.name}</h5>
                                     <p>{i.food.ingredients}</p>

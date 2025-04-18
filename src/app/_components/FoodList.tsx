@@ -17,7 +17,7 @@ type FoodType = {
     price: number;
     category: string;
     image: string;
-    ingredients: string;
+    ingredients: string[];
     _id: string;
     createdAt: string;
     updatedAt: string;
