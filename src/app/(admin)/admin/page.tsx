@@ -1,158 +1,30 @@
-"use client";
+"use client"
 
 import { Button } from "@/components/ui/button";
-import {
-    FormField,
-    FormItem,
-    FormControl,
-    FormMessage,
-    Form,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { BASE_URL } from "@/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { headers } from "next/headers";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import FoodMenu from "./_components/FoodMenu";
+import FoodForm from "./_components/FoodForm";
 
-const Admin = () => {
-    const [file, setFile] = useState<any>("");
 
-    const formSchema = z.object({
-        foodName: z.string().min(2).max(50),
-        price: z.string(),
-        ingredients: z.string(),
-        category: z.string(),
-        image: z.string(),
-    });
-
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            foodName: "",
-            price: "",
-            ingredients: "",
-            category: "",
-            image: "",
-        },
-    });
-
-    // const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-    const UPLOAD_PRESET = "ml_default";
-    const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-
-    type ValueType = {
-        foodName: string,
-        price: string,
-        ingredients: string,
-        category: string,
-        image: string,
-    }
-
-    const onSubmit = async (value: ValueType) => {
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", UPLOAD_PRESET);
-
-        const response = await fetch(
-            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-            {
-                method: "POST",
-                body: formData,
-            }
-        );
-
-        const { url } = await response.json();
-        // console.log(result)
-
-        const token = localStorage.getItem("token");
-        const food = await axios.post(`${BASE_URL}/foods`, { ...value, image: url }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        console.log(food);
-    };
-
+const Admin = () => {    
     return (
-        <div className="w-1/2 mx-auto">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className="my-4">
-                        <FormField
-                            control={form.control}
-                            name="foodName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input placeholder="Enter food name..." {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+        <div className="grid grid-cols-5 gap-4">
+            <div className="p-4">
+                <div className="flex gap-4 pb-8">
+                    <img src="assets/cap.svg" />
+                    <div>
+                        <h3>NomNom</h3>
+                        <p>Swift delivery</p>
                     </div>
-                    <div className="my-4">
-                        <FormField
-                            control={form.control}
-                            name="price"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter food price..."
-                                            type="text"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="my-4">
-                        <FormField
-                            control={form.control}
-                            name="ingredients"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Enter food ingredients..."
-                                            type="text"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="my-4">
-                        <FormField
-                            control={form.control}
-                            name="category"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input placeholder="Enter category..." {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="my-4">
-                        <Input type="file" onChange={(event:any) => setFile(event.target.files[0])} /> 
-                    </div>
-
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
+                </div>
+                <div className="space-y-2">
+                    <div><Button className="w-1/2 rounded-full">Food Menu</Button></div>
+                    <div><Button className="w-1/2 rounded-full">Orders</Button></div>
+                    <div><Button className="w-1/2 rounded-full">Settings</Button></div>
+                </div>
+            </div>
+            <div className="col-span-4 m-10">
+                <FoodMenu />
+            </div>
         </div>
     );
 };

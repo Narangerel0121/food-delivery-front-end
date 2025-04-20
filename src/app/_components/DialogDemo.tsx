@@ -36,20 +36,20 @@ export function DialogDemo(props: FoodType) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="icon" variant="outline" className="rounded-full absolute left-66 top-40 bg-white p-4"><Plus size={10} color="#ef4444" /></Button>
+        <Button size="icon" variant="outline" className="rounded-full absolute right-5 bottom-5 bg-white p-4"><Plus size={10} strokeWidth={2} className="text-red-500"/></Button>
       </DialogTrigger>
-      <DialogContent className="grid grid-cols-2 min-w-3xl min-h-2/5 gap-4">
+      <DialogContent className="grid grid-cols-2 min-w-3xl min-h-2/5 gap-9">
         <img src={`${props.image}`} className="h-full rounded-md" />
         <div className="flex flex-col justify-between">
           <div>
-            <DialogTitle>{props.name}</DialogTitle>
-            <DialogDescription>{props.ingredients}</DialogDescription>
+            <DialogTitle className="text-2xl font-semibold text-red-500 capitalize">{props.name}</DialogTitle>
+            <DialogDescription className="text-base font-normal text-foreground">{props.ingredients}</DialogDescription>
           </div>
           <div>
             <div className="flex justify-between">
               <div>
-                <p>Total price</p>
-                <p >{`$${totalPrice}`}</p>
+                <p className="text-base font-normal">Total price</p>
+                <h3 className="font-semibold text-2xl" >{`$${totalPrice}`}</h3>
               </div>
               <div className="flex gap-4 items-center">
                 <Button onClick={decrement} disabled={counter == 1} size="icon" variant="outline" className="rounded-full"><Minus></Minus></Button>

@@ -6,7 +6,7 @@ import { Minus, Plus } from "lucide-react";
 
 export type ItemType = {
     count: number;
-    food: FoodType; 
+    food: FoodType;
 }
 
 export type FoodType = {
@@ -30,14 +30,14 @@ const CartContext = createContext<ContextType>({
     totalAmount: 0,
     addItem: (_item: any) => { },
     removeItem: (_id: string) => { },
-    setOpen: (_open: boolean) => {},
+    setOpen: (_open: boolean) => { },
 })
 
 const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const getLocalStorage = 
-    typeof window !== "undefined" &&  localStorage.getItem("cart") 
-    ? JSON.parse(localStorage.getItem("cart") as string) 
-    : []
+    const getLocalStorage =
+        typeof window !== "undefined" && localStorage.getItem("cart")
+            ? JSON.parse(localStorage.getItem("cart") as string)
+            : []
     const [item, setItem] = useState<ItemType[]>(getLocalStorage);
     const [open, setOpen] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
@@ -79,14 +79,17 @@ const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
         <CartContext.Provider value={{ item, addItem, setOpen }}>
             <Sheet open={open} onOpenChange={setOpen}>
                 {/* <SheetTrigger>Open</SheetTrigger> */}
-                <SheetContent>
-                    <div>
+                <SheetContent className="bg-neutral-700 min-w-1/3">
+                    <div className="mx-8 mt-8 rounded-[20px] bg-white">
                         {item.map((i: any) => {
                             return (
-                                <div key={i.food._id} className="p-4">
-                                    <img src={`${i.food.image}`} />
+                                <div key={i.food._id} className="p-4 grid grid-cols-3 gap-4">
+                                    <img src={`${i.food.image}`} className="rounded-lg" />
+                                    <div className="col-span-2">
+                                    <div>
                                     <h5>{i.food.name}</h5>
                                     <p>{i.food.ingredients}</p>
+                                    </div>
                                     <div>
                                         <div className="flex justify-between">
                                             <div className="flex gap-4 items-center">
@@ -97,13 +100,25 @@ const CartProvider: React.FC<PropsWithChildren> = ({ children }) => {
                                             <p>{i.count * i.food.price}</p>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
                             )
                         })}
                     </div>
-                    <div className="flex w-full justify-between">
-                        <p>Total amount</p>
-                        <p>{totalAmount}</p>
+                    <div className=" bg-white rounded-[20px] mx-8 mt-8 p-4">
+                        <h3>Payment Info</h3>
+                        <div className="flex w-full justify-between">
+                            <p>Items</p>
+                            <p>{totalAmount}</p>
+                        </div>
+                        <div className="flex w-full justify-between">
+                            <p>Shipping</p>
+                            <p>$0.99</p>
+                        </div>
+                        <div className="flex w-full justify-between">
+                            <p>Total</p>
+                            <p>{`${totalAmount + 0.99}`}</p>
+                        </div>
                     </div>
                 </SheetContent>
             </Sheet>

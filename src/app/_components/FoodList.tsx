@@ -37,18 +37,18 @@ const FoodList = async () => {
                 return (
                     <div key={category._id}>
                         <h1 className="font-semibold text-3xl text-white mb-9 mt-16">{category.name}</h1>
-                        <div className="grid grid-cols-4 space-x-9">{category.foods.map((food) => {
+                        <div className="grid grid-cols-3 gap-9">{category.foods.map((food) => {
                             return (
-                                <Card key={food._id} className="w-[360px] rounded-[20px] my-9 p-4">
+                                <Card key={food._id} className="w-[520px] rounded-[20px] p-5">
                                     <div className="relative w-full p-0">
                                         <img src={`${food.image}`} className="object-cover rounded-xl" />
                                         <DialogDemo id={food._id} name={food.foodName} price={food.price} ingredients={food.ingredients} image={food.image} />
                                     </div>
-                                    <div className="flex justify-between">
-                                        <h5>{food.foodName}</h5>
-                                        <p>{`$${food.price}`}</p>
+                                    <div className="flex justify-between m-0">
+                                        <h5 className="text-red-500 font-semibold text-2xl capitalize">{food.foodName}</h5>
+                                        <p className="text-foreground font-semibold text-lg">{`$${food.price}`}</p>
                                     </div>
-                                    <div className="mb-5">
+                                    <div className="font-normal text-base">
                                         {food.ingredients}
                                     </div>
                                 </Card>
