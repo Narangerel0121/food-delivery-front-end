@@ -12,6 +12,8 @@ import { z } from "zod";
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
 import { LoginType } from "../login/page";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 export type ErrorType = {
     response: {
@@ -52,18 +54,20 @@ const Register = () => {
     };
 
     return (
-        <div>
-            <h1>Register</h1>
-            <div>
+        <div className="grid grid-cols-5">
+            <div className="col-span-2 w-1/2 place-self-center">
+           <Link href="/"><Button size="icon" variant="outline"><ChevronLeft></ChevronLeft></Button></Link>
+                <h3 className="font-semibold text-2xl mt-4">Create your account</h3>
+                <p className="mb-6 text-muted-foreground">Sign up to explore your favorite dishes</p>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="email" type="email" {...field} />
+                                        <Input placeholder="Enter your email address" type="email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -75,17 +79,20 @@ const Register = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input placeholder="password" type="password" {...field} />
+                                        <Input placeholder="Password" type="password" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         {error && <p className="text-red-500">{error}</p>}
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit" className="w-full mb-6">Let's go</Button>
                     </form>
                 </Form>
-
+                <p className="text-muted-foreground text-center">Already have an account? <span className="text-blue-600"><Link href="/login">Login</Link></span></p>
+            </div>
+            <div className="col-span-3">
+                <img src="/assets/loginImage.png" className="w-full p-5 rounded-lg" />
             </div>
         </div>
     )
