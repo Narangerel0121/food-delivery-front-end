@@ -6,11 +6,10 @@ import { BASE_URL } from "@/constants";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { UpdateFoodDialog } from "./UpdateFoodDialog";
-import { Plus } from "lucide-react";
 import { CategoryDialog } from "./CategoryDialog";
 import { AddFoodDialog } from "./AddFoodDialog";
 
-type FoodType = {
+export type FoodType = {
     foodName: string;
     price: number;
     image: string;
@@ -18,7 +17,7 @@ type FoodType = {
     _id: string;
 }
 
-type CategoryType = {
+export type CategoryType = {
     name: string;
     _id: string;
     foods: FoodType[]

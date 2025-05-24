@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -16,12 +14,22 @@ import { Pen, Trash } from "lucide-react";
 import { FormField, FormItem, FormControl, FormMessage, Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BookImage } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CategoryType } from "@/app/_components/FoodList";
 
-export function UpdateFoodDialog(props) {
+type PropsType = {
+    category: string,
+    image: string,
+    price: string,
+    ingredients: string,
+    name: string,
+    foodId: string,
+    categoryId: string
+}
+
+
+export function UpdateFoodDialog(props: PropsType) {
 
     const [file, setFile] = useState<any>("");
     const [imageLink, setImageLink] = useState("");
@@ -87,7 +95,7 @@ export function UpdateFoodDialog(props) {
         // console.log(food);
     };
 
-    const deleteFood = async() => {
+    const deleteFood = async () => {
         const token = localStorage.getItem("token");
         const deleteFood = await axios.delete(`${BASE_URL}/foods/${props.foodId}`, {
             headers: {
@@ -185,9 +193,9 @@ export function UpdateFoodDialog(props) {
                             </Label>
                             <Input type="file" id="update_image" className="hidden" onChange={handleImage} />
                         </div>
-                        
+
                         <div className="justify-self-end">
-                        <Button type="submit" className="justify-start-end">Save changes</Button>
+                            <Button type="submit" className="justify-start-end">Save changes</Button>
                         </div>
                     </form>
                 </Form>
