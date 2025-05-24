@@ -6,6 +6,8 @@ const Reset = () => {
     )
 }
 
+export default Reset
+
 // "use client"
 
 // import { Button } from "@/components/ui/button";
