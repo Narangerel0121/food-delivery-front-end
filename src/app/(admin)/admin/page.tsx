@@ -2,8 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import FoodMenu from "./_components/FoodMenu";
-import FoodForm from "./_components/FoodForm";
-
 
 const Admin = () => {    
     return (

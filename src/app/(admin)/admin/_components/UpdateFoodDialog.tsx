@@ -18,11 +18,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-type PropsType = {
+export type PropsType = {
     category: string,
     image: string,
-    price: string,
-    ingredients: string,
+    price: number,
+    ingredients: string[],
     name: string,
     foodId: string,
     categoryId: string

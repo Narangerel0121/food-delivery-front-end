@@ -29,7 +29,12 @@ type ValueType = {
     image: string,
 }
 
-export function AddFoodDialog(props) {
+type PropsType = {
+    id: string;
+    categoryName: string
+}
+
+export function AddFoodDialog(props: PropsType) {
     // console.log(props.id)
     const [file, setFile] = useState<any>("");
     const [imageLink, setImageLink] = useState("");
